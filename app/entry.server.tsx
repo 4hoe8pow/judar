@@ -11,7 +11,6 @@ import { isbot } from 'isbot'
 
 import type { AppLoadContext, EntryContext } from '@remix-run/cloudflare'
 
-
 export default async function handleRequest(
 	request: Request,
 	responseStatusCode: number,

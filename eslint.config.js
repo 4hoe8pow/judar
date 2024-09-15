@@ -20,7 +20,7 @@ const baseConfig = {
 		'*.config.ts',
 		'tailwind.config.ts',
 		'styled-system',
-		'worker-configuration.d.ts'
+		'worker-configuration.d.ts',
 	],
 }
 

@@ -21,6 +21,7 @@ const baseConfig = {
 		'tailwind.config.ts',
 		'styled-system',
 		'worker-configuration.d.ts',
+		'functions/',
 	],
 }
 

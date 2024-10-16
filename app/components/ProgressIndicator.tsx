@@ -8,7 +8,7 @@ const circle = cva({
 		rounded: '50%',
 		border: '8px solid transparent',
 		position: 'absolute',
-		animation: `spin 1s linear infinite`,
+		animation: 'spin 1s linear infinite',
 		borderTopColor: 'red.500',
 		borderRightColor: 'green.500',
 		borderBottomColor: 'blue.500',

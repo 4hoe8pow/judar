@@ -1,4 +1,12 @@
-import { defineConfig } from '@pandacss/dev'
+import { defineConfig, defineGlobalStyles } from '@pandacss/dev'
+
+const globalCss = defineGlobalStyles({
+	'html, body': {
+		fontFamily: 'eb',
+		fontSize: 26,
+		color: 'slate.800',
+	},
+})
 
 export default defineConfig({
 	// Whether to use css reset
@@ -12,9 +20,16 @@ export default defineConfig({
 
 	// Useful for theme customization
 	theme: {
-		extend: {},
+		extend: {
+			tokens: {
+				fonts: {
+					eb: { value: 'var(--font-eb), monospace' },
+				},
+			},
+		},
 	},
 
 	// The output directory for your css system
 	outdir: 'styled-system',
+	globalCss,
 })

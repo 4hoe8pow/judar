@@ -1,0 +1,14 @@
+{
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"seatonjiang.gitmoji-vscode",
+		"naumovs.color-highlight",
+		"bracketpaircolordlw.bracket-pair-color-dlw",
+		"miguelsolorio.fluent-icons",
+		"liviuschera.noctis",
+		"pkief.material-icon-theme",
+		"formulahendry.auto-rename-tag",
+		"formulahendry.auto-close-tag"
+	]
+}

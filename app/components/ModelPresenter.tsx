@@ -9,15 +9,24 @@ type ModelPresenterProps = {
 }
 
 const ModelPresenter = ({ asset, isThumbnail }: ModelPresenterProps) => {
+	const styles = {
+		pictureFrame: css({
+			w: isThumbnail ? '150px' : '100%',
+			h: isThumbnail ? '25vh' : '100%',
+			border: isThumbnail ? 'none' : '12px solid #d4af37',
+			borderImage: isThumbnail
+				? 'none'
+				: 'linear-gradient(45deg, #d4af37, #f0e68c, #b8860b) 1',
+			boxShadow: isThumbnail
+				? 'none'
+				: '0 0 20px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.5)',
+			rounded: isThumbnail ? 'none' : '15px', // 少し角を丸める
+		}),
+	}
 	return (
-		<Canvas
-			className={css({
-				w: isThumbnail ? '150px' : '100%',
-				h: isThumbnail ? '150px' : '400px',
-			})}
-		>
-			<ambientLight intensity={10} />
-			<Gltf src={asset} scale={0.6} />
+		<Canvas className={styles.pictureFrame}>
+			<ambientLight />
+			<Gltf src={asset} />
 			{!isThumbnail && <OrbitControls />}
 		</Canvas>
 	)

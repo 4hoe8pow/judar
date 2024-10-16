@@ -97,7 +97,7 @@ export default function Index() {
 	}
 
 	return (
-		<div>
+		<section>
 			<div className={styles.container}>
 				{loading ? (
 					<ProgressIndicator />
@@ -120,6 +120,6 @@ export default function Index() {
 			<Modal isOpen={modalOpen} onClose={closeModal}>
 				{selectedModel && <ModelPresenter asset={selectedModel} />}
 			</Modal>
-		</div>
+		</section>
 	)
 }

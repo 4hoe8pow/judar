@@ -1,42 +1,103 @@
 import { MetaFunction } from '@remix-run/cloudflare'
 
+import { css } from 'styled-system/css'
 import { grid, gridItem } from 'styled-system/patterns'
 
 export const meta: MetaFunction = () => [
 	{ title: 'Grillware' },
 	{
 		name: 'description',
-		content: 'Here is grillware home.',
+		content:
+			'Welcome to Grillware, where elegance meets the art of perfect grilling.',
+	},
+]
+
+const projects = [
+	{
+		name: 'Ancient',
+		description:
+			'A 3D CG short film inspired by the sport of Kabaddi, created using Houdini 20.5 and Unreal Engine 5. This project aims to explore the intersection of technology and the cultural heritage of Kabaddi.',
+	},
+	{
+		name: 'Judar',
+		description:
+			'On October 20, 2024, I began a 10,000-day journey to release daily assets made with Houdini. This initiative focuses on building expertise in 3D CGI over an extended period.',
+	},
+	{
+		name: 'Game Development',
+		description:
+			'A series of free mini-games developed in Unity, available on the App Store, covering a variety of genres.',
+	},
+	{
+		name: 'Asset Sales',
+		description:
+			"Offering various 3D models and VFX assets for sale on the 'FAB' marketplace.",
 	},
 ]
 
 export default function Index() {
 	const styles = {
-		container: grid({ columns: 12, gap: 4 }),
+		container: grid({
+			columns: 12,
+			gap: 4,
+			mb: 8,
+			justifyItems: 'center',
+		}),
 		message: gridItem({
-			colStart: { base: 2, sm: 4 },
-			colEnd: { base: 12, sm: 10 },
+			colSpan: 12,
+			color: 'slate.200',
+			textAlign: 'center',
+			bg: 'slate.900',
+			w: '100%',
+		}),
+		heading: css({
+			fontSize: { base: '3xl', sm: '5xl' },
+			fontWeight: 'bold',
+			py: 8,
+		}),
+		paragraph: css({
+			fontSize: { base: 'lg', sm: 'xl' },
+			lineHeight: 'tall',
+			paddingBottom: 4,
+		}),
+		projectItem: gridItem({
+			colSpan: { base: 12, sm: 6 },
+			w: '92%',
+			p: 4,
+			rounded: 'lg',
+			boxShadow:
+				'-12px 12px 18px rgba(0, 0, 0, 0.3), inset 6px -6px 9px rgba(0, 0, 0, 0.3), inset -6px 6px 9px rgba(255, 255, 255, 0.6)',
+			transition: 'transform 0.3s ease',
+			_hover: {
+				transform: 'scale(1.05)',
+			},
+		}),
+		projectHeading: css({
+			fontSize: 'xl',
+			fontWeight: 'bold',
+			mb: 2,
+		}),
+		projectDescription: css({
+			fontSize: 'md',
 		}),
 	}
 
 	return (
-		<div className={styles.container}>
+		<section className={styles.container}>
 			<div className={styles.message}>
-				On October 20th, 2024, I commenced a long-term project to
-				release assets created with Houdini on a daily basis over a span
-				of 10,000 days. This initiative aims to enhance my understanding
-				of Houdini as a novice in 3DCG and to serve as a self-challenge,
-				given my tendency to lose interest in pursuits.
+				<h1 className={styles.heading}>GRILLWARE PRESENTS</h1>
+				<p className={styles.paragraph}>
+					Enabling the gateway to transformative journeys.
+				</p>
 			</div>
-			<div className={styles.message}>
-				I plan to create one model each day for publication on this
-				website. The site has been built using Remix v2, Three.js, and
-				Cloudflare R2; however, due to rapid technological advancements,
-				updates are anticipated throughout the 10,000-day
-				period—approximately 28 years—to align with future web trends. I
-				consider myself fortunate to possess a background as a web
-				engineer, enabling me to address these challenges independently.
-			</div>
-		</div>
+			{projects.map((project, index) => (
+				<div key={index} className={styles.projectItem}>
+					<h2 className={styles.projectHeading}>{project.name}</h2>
+					<p className={styles.projectDescription}>
+						{project.description}
+					</p>
+				</div>
+			))}
+		</section>
 	)
 }

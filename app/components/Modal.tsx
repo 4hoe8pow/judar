@@ -15,18 +15,18 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 	return (
 		<div
 			className={flex({
-				position: 'fixed',
+				pos: 'fixed',
 				inset: 0,
-				alignItems: 'center',
+				align: 'center',
 				zIndex: 1000,
 			})}
 		>
 			{/* Overlay to darken background */}
 			<div
 				className={css({
-					position: 'absolute',
+					pos: 'absolute',
 					inset: 0,
-					backgroundColor: 'white',
+					bg: 'white',
 					opacity: 0.6,
 					filter: 'auto',
 					blur: 'lg',
@@ -42,10 +42,10 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 			{/* Modal Content */}
 			<div
 				className={container({
-					position: 'relative',
+					pos: 'relative',
 					zIndex: 50,
-					maxWidth: 'md',
-					width: 'full',
+					maxW: 'md',
+					w: 'full',
 				})}
 			>
 				{children}

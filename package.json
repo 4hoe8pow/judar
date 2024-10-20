@@ -18,7 +18,7 @@
 		"*.{ts,tsx}": "eslint --fix"
 	},
 	"dependencies": {
-		"@react-three/drei": "^9.114.5",
+		"@react-three/drei": "^9.114.6",
 		"@react-three/fiber": "^8.17.10",
 		"@remix-run/cloudflare": "^2.13.1",
 		"@remix-run/cloudflare-pages": "^2.13.1",
@@ -31,7 +31,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20241018.0",
-		"@pandacss/dev": "^0.46.1",
+		"@pandacss/dev": "^0.47.0",
 		"@remix-run/dev": "^2.13.1",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.3.1",

@@ -27,22 +27,8 @@ const checkImageExists = async (url: string) => {
 }
 
 export const loader: LoaderFunction = async ({ context }) => {
-	const { R2, GOOGLE_SHEET_KEY, GOOGLE_SHEET_ID, GOOGLE_SHEET_NAME } =
-		context.cloudflare.env
+	const { R2 } = context.cloudflare.env
 	const objects = (await R2.list()).objects
-
-	// Google Sheets APIからデータ取得
-	const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${GOOGLE_SHEET_NAME}?valueRenderOption=FORMATTED_VALUE&key=${GOOGLE_SHEET_KEY}`
-
-	try {
-		const sheetResponse = await fetch(sheetUrl)
-		const sheetData = await sheetResponse.json()
-
-		// デバッグ用に取得データをコンソールに出力
-		console.info('Google Sheets Data:', sheetData)
-	} catch (error) {
-		console.error('Error fetching Google Sheets data:', error)
-	}
 
 	const modelData = await Promise.all(
 		objects
@@ -72,6 +58,11 @@ export default function Index() {
 			title: string
 			uploaded: string
 			thumbnailUrl: string
+			additional: {
+				id: string
+				title: string
+				description: string
+			}
 		}[]
 	>()
 
@@ -104,13 +95,25 @@ export default function Index() {
 		return () => window.removeEventListener('scroll', handleScroll)
 	}, [currentPage, modelData])
 
+	const calculateDaysSince = (uploaded: string): number => {
+		const initialDate = new Date('2024-10-20') // 初日
+		const uploadedDate = new Date(uploaded) // uploadedの日付をDate型に変換
+
+		// 経過ミリ秒を計算
+		const timeDifference = uploadedDate.getTime() - initialDate.getTime()
+
+		// 経過日数を計算し、初日を含むため1を加算
+		return Math.floor(timeDifference / (1000 * 3600 * 24)) + 1
+	}
+
 	const styles = {
 		section: flex({
 			flexWrap: 'wrap',
 			align: 'center',
 			justify: 'center',
 			px: 8,
-			gap: 4,
+			gap: 8,
+			my: 8,
 		}),
 		card: vstack({
 			borderBottom: '1px solid #ddd',
@@ -152,7 +155,10 @@ export default function Index() {
 								/>
 								<div className={styles.info}>
 									<div className={styles.title}>
-										{trimmedTitle}
+										<span>
+											{calculateDaysSince(uploaded)}
+										</span>
+										{title}
 									</div>
 									<div className={styles.date}>
 										{formatDate(uploaded)}

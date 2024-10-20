@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { json, LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 
+import { formatDate } from '~/components/utils/formatDate'
 import { getNewsBySlug } from '~/newt.server'
 
 import { css } from 'styled-system/css'
@@ -35,10 +36,35 @@ export default function NewsDetailPage() {
 	}, [])
 
 	const styles = {
-		articleBody: css.raw({
+		container: css({
 			m: '2rem auto',
 			maxW: '6xl',
 			px: 8,
+		}),
+		heading: css({
+			mb: '16',
+			fontSize: '3xl',
+			fontWeight: 'bold',
+			textAlign: 'center',
+			pos: 'relative',
+			letterSpacing: 'wide', // 文字間隔を広く
+			color: 'slate.800',
+			textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)', // 軽いシャドウで立体感を
+			_after: {
+				content: '""',
+				display: 'block',
+				w: '[100px]',
+				h: '[3px]',
+				bg: 'slate.700',
+				m: '0 auto',
+				pos: 'absolute',
+				bottom: '[-16px]',
+				left: '50%',
+				transform: 'translateX(-50%)',
+				rounded: 'lg',
+			},
+		}),
+		articleBody: css.raw({
 			opacity: 0,
 			transition: 'opacity 0.5s ease-in',
 
@@ -91,14 +117,26 @@ export default function NewsDetailPage() {
 				color: 'teal.200',
 			},
 		}),
+		signature: css({
+			textAlign: 'right',
+			fontStyle: 'italic',
+			color: 'slate.600',
+			mt: '36',
+		}),
 	}
 
 	return (
-		<article
-			className={`${css(styles.articleBody)} ${isVisible ? 'fadeIn' : ''}`}
-			dangerouslySetInnerHTML={{
-				__html: `${news.body}`,
-			}}
-		/>
+		<div className={styles.container}>
+			<h1 className={styles.heading}>{news.title}</h1>
+			<article
+				className={`${css(styles.articleBody)} ${isVisible ? 'fadeIn' : ''}`}
+				dangerouslySetInnerHTML={{
+					__html: `${news.body}`,
+				}}
+			/>
+			<div className={styles.signature}>
+				{formatDate(news._sys.createdAt)} Grillware
+			</div>
+		</div>
 	)
 }

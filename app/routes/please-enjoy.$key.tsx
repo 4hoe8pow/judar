@@ -4,9 +4,10 @@ import { json, LoaderFunction, MetaFunction } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 
 import { css } from 'styled-system/css'
+import { flex } from 'styled-system/patterns'
 
-type LoaderData = {
-	assetUrl: string
+type ModelPresenterProps = {
+	asset: string
 }
 
 export const meta: MetaFunction = ({ params }) => [
@@ -19,29 +20,37 @@ export const meta: MetaFunction = ({ params }) => [
 
 export const loader: LoaderFunction = async ({ params, context }) => {
 	const { R2 } = context.cloudflare.env
-	let { key } = params
+	const { key } = params
 
 	if (!key) {
 		throw new Response("The 'key' parameter is required.", { status: 500 })
 	}
 
-	key = key.replace(/_/g, '/')
-	const object = await R2.get(key)
+	// .gltfを.txtに変更
+	const gltfKey = key.replace(/_/g, '/')
+	const txtKey = gltfKey.replace(/\.gltf$/, '.txt')
+
+	const object = await R2.get(gltfKey)
+	const descriptionObject = await R2.get(txtKey)
 
 	if (!object) {
 		throw new Response(
-			`The requested model with key '${key}' could not be found.`,
+			`The requested model with key '${gltfKey}' could not be found.`,
 			{ status: 404 }
 		)
 	}
 
-	const assetUrl = `https://judar-bucket.grill-ware.com/${key}`
+	if (!descriptionObject) {
+		throw new Response(
+			`The requested description file with key '${txtKey}' could not be found.`,
+			{ status: 404 }
+		)
+	}
 
-	return json({ assetUrl })
-}
+	const assetUrl = `https://judar-bucket.grill-ware.com/${gltfKey}`
+	const description = await descriptionObject.text()
 
-type ModelPresenterProps = {
-	asset: string
+	return json({ assetUrl, description })
 }
 
 const ModelPresenter = ({ asset }: ModelPresenterProps) => {
@@ -61,26 +70,36 @@ const ModelPresenter = ({ asset }: ModelPresenterProps) => {
 }
 
 export default function EnjoyModel() {
-	const { assetUrl } = useLoaderData<LoaderData>()
+	const { assetUrl, description } = useLoaderData<typeof loader>()
 	const styles = {
-		container: css({
-			pos: 'absolute',
-			top: '50%',
-			left: '50%',
-			transform: 'translate(-50%, -50%)',
-			w: '62%',
-			h: '62%',
-			maxW: '[432px]',
-			maxH: '[432px]',
-			boxShadow:
-				'inset 30px 30px 59px #adadad, inset -30px -30px 59px #ffffff;',
+		container: flex({
+			direction: 'column',
+			align: 'center',
+			justify: 'center',
+			p: '12',
+			mb: '8',
+		}),
+		canvas: css({
+			w: '61.8vw',
+			px: 4,
+			bg: 'white',
 			rounded: '2xl',
+			boxShadow: '18px 18px 36px #7a7a7a, -18px -18px 36px #ffffff',
+			aspectRatio: 'golden',
+		}),
+		description: css({
+			textAlign: 'center',
+			whiteSpace: 'nowrap',
+			py: 12,
 		}),
 	}
 
 	return (
 		<div className={styles.container}>
-			<ModelPresenter asset={assetUrl} />
+			<div className={styles.canvas}>
+				<ModelPresenter asset={assetUrl} />
+			</div>
+			<p className={styles.description}>{description}</p>
 		</div>
 	)
 }

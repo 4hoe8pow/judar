@@ -1,6 +1,11 @@
 export const formatDate = (dateString: string) => {
 	const date = new Date(dateString)
-	const options = { year: 'numeric', month: 'short', day: 'numeric' } as const
+	const options = {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		timeZone: 'Asia/Tokyo',
+	} as const
 	const formatted = date.toLocaleDateString('en-US', options)
 	const day = date.getDate()
 	const daySuffix = (n: number) =>

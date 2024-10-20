@@ -17,60 +17,51 @@ export const meta: MetaFunction = () => [
 // Loader function to fetch data
 export const loader = async () => {
 	const data = {
-		games: [
-			{
-				name: 'Foo Game',
-				description: 'A fantastic gaming experience',
-				url: 'https://foo.com',
-			},
-			{
-				name: 'Bar Game',
-				description: 'An adventure awaits',
-				url: 'https://bar.com',
-			},
-		],
 		films: [
 			{
-				name: 'Foo Film',
-				description: 'An exciting new release',
-				url: 'https://foo-film.com',
-			},
-			{
-				name: 'Bar Film',
-				description: 'A cinematic masterpiece',
-				url: 'https://bar-film.com',
+				name: 'ANCIENTS',
+				description: 'A 3DCG animation based on the sport of Kabaddi.',
+				url: 'https://www.youtube.com/channel/UCbHgL6VQB5vmFkExQkTJ4Bw',
 			},
 		],
-		fab: [
+		games: [
 			{
-				name: 'Foo FAB',
-				description: 'Innovative fabrication projects',
-				url: 'https://foo-fab.com',
+				name: 'Surguess',
+				description:
+					'A mini-game where players guess which object has the largest surface area.',
+				url: 'https://apps.apple.com/jp/app/surguess/id6736586676',
 			},
 			{
-				name: 'Bar FAB',
-				description: 'Cutting-edge designs',
-				url: 'https://bar-fab.com',
+				name: 'Bakery Text',
+				description: 'A text-based defense game.',
+				url: 'https://apps.apple.com/jp/app/bakery-text/id6535655350',
+			},
+		],
+		assets: [
+			{
+				name: '(WIP)FAB',
+				description: 'For users of Unreal Engine.',
+				url: 'https://fab.com',
 			},
 		],
 	}
+
 	return json(data)
 }
 
 export default function Index() {
-	const { games, films, fab } = useLoaderData<typeof loader>()
-
+	const { games, films, assets } = useLoaderData<typeof loader>()
+	const [isFilmsOpen, setIsFilmsOpen] = useState(true)
 	const [isGamesOpen, setIsGamesOpen] = useState(false)
-	const [isFilmsOpen, setIsFilmsOpen] = useState(false)
-	const [isFabOpen, setIsFabOpen] = useState(false)
+	const [isAssetsOpen, setIsAssetsOpen] = useState(false)
 
 	const toggleSection = (section: string) => {
 		if (section === 'games') {
 			setIsGamesOpen(!isGamesOpen)
 		} else if (section === 'films') {
 			setIsFilmsOpen(!isFilmsOpen)
-		} else if (section === 'fab') {
-			setIsFabOpen(!isFabOpen)
+		} else if (section === 'assets') {
+			setIsAssetsOpen(!isAssetsOpen)
 		}
 	}
 
@@ -107,9 +98,9 @@ export default function Index() {
 			mb: '0.5rem',
 		}),
 		link: css({
-			color: 'sky.500',
+			color: 'slate.500',
 			textDecoration: 'none',
-			_hover: { textDecoration: 'underline' },
+			_hover: { textDecoration: 'underline', color: 'slate.300' },
 		}),
 		icon: css({
 			marginRight: '0.5rem',
@@ -158,19 +149,18 @@ export default function Index() {
 	return (
 		<section className={styles.container}>
 			<h1 className={styles.title}>Latest from Grillware Studio</h1>
-
-			{/* Games Section */}
-			{renderSection('Games', games, isGamesOpen, () =>
-				toggleSection('games')
-			)}
-
 			{/* Films Section */}
 			{renderSection('Films', films, isFilmsOpen, () =>
 				toggleSection('films')
 			)}
-
-			{/* FAB Section */}
-			{renderSection('FAB', fab, isFabOpen, () => toggleSection('fab'))}
+			{/* Games Section */}
+			{renderSection('Games', games, isGamesOpen, () =>
+				toggleSection('games')
+			)}
+			{/* Assets Section */}
+			{renderSection('Assets', assets, isAssetsOpen, () =>
+				toggleSection('assets')
+			)}
 		</section>
 	)
 }

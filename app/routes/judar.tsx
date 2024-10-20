@@ -27,8 +27,22 @@ const checkImageExists = async (url: string) => {
 }
 
 export const loader: LoaderFunction = async ({ context }) => {
-	const { R2 } = context.cloudflare.env
+	const { R2, GOOGLE_SHEET_KEY, GOOGLE_SHEET_ID, GOOGLE_SHEET_NAME } =
+		context.cloudflare.env
 	const objects = (await R2.list()).objects
+
+	// Google Sheets APIからデータ取得
+	const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${GOOGLE_SHEET_NAME}?valueRenderOption=FORMATTED_VALUE&key=${GOOGLE_SHEET_KEY}`
+
+	try {
+		const sheetResponse = await fetch(sheetUrl)
+		const sheetData = await sheetResponse.json()
+
+		// デバッグ用に取得データをコンソールに出力
+		console.info('Google Sheets Data:', sheetData)
+	} catch (error) {
+		console.error('Error fetching Google Sheets data:', error)
+	}
 
 	const modelData = await Promise.all(
 		objects

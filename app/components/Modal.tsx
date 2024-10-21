@@ -21,7 +21,6 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 				zIndex: 1000,
 			})}
 		>
-			{/* Overlay to darken background */}
 			<div
 				className={css({
 					pos: 'absolute',

@@ -48,6 +48,12 @@ export const loader: LoaderFunction = async ({ context }) => {
 			})
 	)
 
+	// uploaded フィールドに基づいて降順（新しいものが上）にソート
+	modelData.sort(
+		(a, b) =>
+			new Date(b.uploaded).getTime() - new Date(a.uploaded).getTime()
+	)
+
 	return json(modelData)
 }
 

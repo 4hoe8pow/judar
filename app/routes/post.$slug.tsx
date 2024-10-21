@@ -135,7 +135,9 @@ export default function NewsDetailPage() {
 				}}
 			/>
 			<div className={styles.signature}>
-				{formatDate(news._sys.createdAt)} Grillware
+				{formatDate(news._sys.createdAt)}
+				<br />
+				Grillware
 			</div>
 		</div>
 	)

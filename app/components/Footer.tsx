@@ -14,9 +14,10 @@ const styles = {
 		color: 'slate.600',
 	}),
 	socialNav: flex({
-		justifyContent: 'center',
-		gap: '1.5rem',
-		mt: '1rem',
+		justify: 'center',
+		align: 'center',
+		gap: '8',
+		mt: '4',
 	}),
 	socialIcon: css({
 		fontSize: '1.5rem',
@@ -35,18 +36,25 @@ export const Footer = () => {
 			</p>
 			<nav className={styles.socialNav}>
 				<Link
-					to="https://x.com/4hoe8pow"
+					to="https://x.com/judar_grillware"
 					aria-label="X"
 					className={styles.socialIcon}
 				>
-					<img src="/logo-x.svg" width={24} alt="Logo X"></img>
+					<img src="/logo-x.svg" width={16} alt="Logo X"></img>
 				</Link>
 				<Link
-					to="https://instagram.com/4b.grilled"
+					to="https://www.youtube.com/channel/UCbHgL6VQB5vmFkExQkTJ4Bw"
+					aria-label="Youtube"
+					className={styles.socialIcon}
+				>
+					<img src="/logo-yt.png" width={16} alt="Logo Youtube"></img>
+				</Link>
+				<Link
+					to="https://instagram.com/judar.grillware"
 					aria-label="Instagram"
 					className={styles.socialIcon}
 				>
-					<img src="/logo-ig.svg" width={24} alt="Logo IG"></img>
+					<img src="/logo-ig.svg" width={16} alt="Logo IG"></img>
 				</Link>
 			</nav>
 		</footer>

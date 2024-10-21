@@ -58,11 +58,6 @@ export default function Index() {
 			title: string
 			uploaded: string
 			thumbnailUrl: string
-			additional: {
-				id: string
-				title: string
-				description: string
-			}
 		}[]
 	>()
 
@@ -127,6 +122,11 @@ export default function Index() {
 			objectFit: 'cover',
 		}),
 		info: hstack({}),
+		prefix: css({
+			fontWeight: 'normal',
+			fontSize: '1.0rem',
+			mr: 1,
+		}),
 		title: css({
 			fontWeight: 'bold',
 			fontSize: '1.2rem',
@@ -155,10 +155,10 @@ export default function Index() {
 								/>
 								<div className={styles.info}>
 									<div className={styles.title}>
-										<span>
+										<span className={styles.prefix}>
 											{calculateDaysSince(uploaded)}
 										</span>
-										{title}
+										{trimmedTitle}
 									</div>
 									<div className={styles.date}>
 										{formatDate(uploaded)}

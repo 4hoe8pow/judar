@@ -1,21 +1,19 @@
 import { useState } from 'react'
 
-import { MetaFunction, json } from '@remix-run/cloudflare'
+import { LoaderFunctionArgs, MetaFunction, json } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
+
+import { getArticleList } from '~/newt.server'
 
 import { css } from 'styled-system/css'
 import { container } from 'styled-system/patterns'
 
 export const meta: MetaFunction = () => [
 	{ title: 'Grillware - Studio' },
-	{
-		name: 'description',
-		content: 'Here is Grillware Studio.',
-	},
+	{ name: 'description', content: 'Here is Grillware Studio.' },
 ]
 
-// Loader function to fetch data
-export const loader = async () => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
 	const data = {
 		films: [
 			{
@@ -46,24 +44,32 @@ export const loader = async () => {
 		],
 	}
 
-	return json(data)
+	const {
+		NEWT_SPACE_UID: spaceUid,
+		NEWT_APP_UID: appUid,
+		NEWT_CDN_API_TOKEN: token,
+	} = context.cloudflare.env
+	const articles = await getArticleList(spaceUid, appUid, token)
+	const sortedArticles = articles.sort(
+		(a, b) =>
+			new Date(b._sys.createdAt).getTime() -
+			new Date(a._sys.createdAt).getTime()
+	)
+
+	return json({ ...data, articles: sortedArticles })
 }
 
 export default function Index() {
-	const { games, films, assets } = useLoaderData<typeof loader>()
-	const [isFilmsOpen, setIsFilmsOpen] = useState(true)
-	const [isGamesOpen, setIsGamesOpen] = useState(false)
-	const [isAssetsOpen, setIsAssetsOpen] = useState(false)
+	const { games, films, assets, articles } = useLoaderData<typeof loader>()
+	const [openSections, setOpenSections] = useState({
+		films: true,
+		games: false,
+		assets: false,
+		articles: false,
+	})
 
-	const toggleSection = (section: string) => {
-		if (section === 'games') {
-			setIsGamesOpen(!isGamesOpen)
-		} else if (section === 'films') {
-			setIsFilmsOpen(!isFilmsOpen)
-		} else if (section === 'assets') {
-			setIsAssetsOpen(!isAssetsOpen)
-		}
-	}
+	const toggleSection = (section: keyof typeof openSections) =>
+		setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }))
 
 	const styles = {
 		container: container({
@@ -94,9 +100,7 @@ export default function Index() {
 			ml: 8,
 			animation: 'fadein 0.3s ease',
 		}),
-		listItem: css({
-			mb: '0.5rem',
-		}),
+		listItem: css({ mb: '0.5rem' }),
 		link: css({
 			color: 'slate.500',
 			textDecoration: 'none',
@@ -108,14 +112,12 @@ export default function Index() {
 			transform: 'rotate(0deg)',
 			transition: 'transform 0.3s ease',
 		}),
-		iconOpen: css({
-			transform: 'rotate(90deg)',
-		}),
+		iconOpen: css({ transform: 'rotate(90deg)' }),
 	}
 
 	const renderSection = (
 		title: string,
-		items: { name: string; description: string; url: string }[],
+		items: { name: string; description?: string; url?: string }[],
 		isOpen: boolean,
 		toggle: () => void
 	) => (
@@ -134,10 +136,10 @@ export default function Index() {
 			</button>
 			{isOpen && (
 				<ul className={styles.list}>
-					{items.map((item) => (
-						<li key={item.url} className={styles.listItem}>
-							<a href={item.url} className={styles.link}>
-								{item.name} - {item.description}
+					{items.map(({ name, description, url }) => (
+						<li key={url || name} className={styles.listItem}>
+							<a href={url} className={styles.link}>
+								{name} {description ? ` - ${description}` : ''}
 							</a>
 						</li>
 					))}
@@ -149,17 +151,23 @@ export default function Index() {
 	return (
 		<section className={styles.container}>
 			<h1 className={styles.title}>Latest from Grillware Studio</h1>
-			{/* Films Section */}
-			{renderSection('Films', films, isFilmsOpen, () =>
+			{renderSection('Films', films, openSections.films, () =>
 				toggleSection('films')
 			)}
-			{/* Games Section */}
-			{renderSection('Games', games, isGamesOpen, () =>
+			{renderSection('Games', games, openSections.games, () =>
 				toggleSection('games')
 			)}
-			{/* Assets Section */}
-			{renderSection('Assets', assets, isAssetsOpen, () =>
+			{renderSection('Assets', assets, openSections.assets, () =>
 				toggleSection('assets')
+			)}
+			{renderSection(
+				'Articles',
+				articles.map((article) => ({
+					name: article.title,
+					url: `/post/${article.slug}`,
+				})),
+				openSections.articles,
+				() => toggleSection('articles')
 			)}
 		</section>
 	)

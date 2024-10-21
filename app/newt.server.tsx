@@ -31,11 +31,43 @@ export const getNewsList = async (
 	token: string
 ) => {
 	const client = generateClient(spaceUid, token)
+	const { items: tag } = await client.getContents<Tag>({
+		appUid: appUid,
+		modelUid: 'tag',
+		query: {
+			slug: 'devlog',
+		},
+	})
 	const { items } = await client.getContents<News>({
 		appUid: appUid,
 		modelUid: 'article',
 		query: {
+			tag: { ne: tag[0]._id },
 			select: ['_id', '_sys', 'title', 'slug', 'tag'],
+		},
+	})
+	return items
+}
+
+export const getArticleList = async (
+	spaceUid: string,
+	appUid: string,
+	token: string
+) => {
+	const client = generateClient(spaceUid, token)
+	const { items: tag } = await client.getContents<Tag>({
+		appUid: appUid,
+		modelUid: 'tag',
+		query: {
+			slug: 'devlog',
+		},
+	})
+	const { items } = await client.getContents<News>({
+		appUid: appUid,
+		modelUid: 'article',
+		query: {
+			tag: tag[0]._id,
+			select: ['_id', '_sys', 'title', 'slug'],
 		},
 	})
 	return items
@@ -56,6 +88,6 @@ export const getNewsBySlug = async (
 		},
 	})
 
-	// items配列から1件を取得（slugはユニークなので1件のみのはず）
+	// items配列から1件を取得（slugはユニークなので1件のみ）
 	return items.length > 0 ? items[0] : null
 }
